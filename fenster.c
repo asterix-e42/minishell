@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/02/23 20:47:32 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/02/26 21:27:03 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,9 @@ void sheel(char **s)
 	int		size;
 
 	string = (char *)malloc(100);
-//	clean(".");
 	while (strcmp("exit", string))
 	{
-		write(1, "$>", 2);
+		write(1, "$> \x1b[39m", 8);
 		size = cmd(&string);
 		*(string + size) = '\0';
 		exe(string);

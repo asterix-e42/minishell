@@ -43,31 +43,35 @@ int			exe(char *argv)
 {
 	int		count = 0;
 	char	**path;
-	char	*funtest = "ls";
 	char	**av;
 	pid_t	pid;
+	int ret;
 
+	ret = 1;
 	pid = fork();
 	if (pid == 0)
 	{
+		//ft_putnbr(getpid());
 		av = ft_strsplit(argv, ' ');
-		while(ft_strcmpi((unsigned char *)environ[count], (unsigned char *)"PATH"))
-			count++;
-		//printf("%s\n", environ[count]);
-		path = ft_strsplit(*(environ + count) + 5, ':');
-		count = -1;
-		while(*(path + ++count))
-			;//	printf("%s\n", ft_strjoini(*(path + count), funtest, '/'));
-		count = -1;
-		while (*(path + ++count) && access(ft_strjoini(*(path + count), *av, '/'), F_OK))
-			;//printf("%s\n", ft_strjoin(*(path + count), funtest));
-		if (*(path + count))
-			execve(ft_strjoini(*(path + count), *av, '/'), av, environ);
+		if (!access(*av, X_OK))
+			ret = execve(*av, av, environ);
 		else
-			write(1, "2", 1);
+		{
+			while(ft_strcmpi((unsigned char *)environ[count], (unsigned char *)"PATH"))
+				count++;
+			path = ft_strsplit(*(environ + count) + 5, ':');
+			count = -1;
+			while (*(path + ++count) && access(ft_strjoini(*(path + count), *av, '/'), F_OK))
+				;//printf("%s\n", ft_strjoini(*(path + count), *av, '/'));
+			if (*(path + count))
+				ret = execve(ft_strjoini(*(path + count), *av, '/'), av, environ);
+			else
+				write(1, "\x1b[31m", 6);
+		}
 		exit(1);
 	}
 	else
-		wait(0);
-	return 0;
+		wait(&ret);
+	//ft_putnbr(WEXITSTATUS (ret));
+	return ret;
 }
