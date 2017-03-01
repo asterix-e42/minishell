@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/02/26 21:27:03 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/01 16:25:00 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,16 @@
 extern char **environ;
 int main(int ac, char **av)
 {
-	pid_t pid;
+	char	**env;
+	char	**tmp;
 
-	printf("%s\n", *av);
-	pid = fork();
-	if (pid > 0)
-		wait(0);
-	else
-		sheel(av);
+	env = env_ralloc(0, environ);
+	env_lvlup(env);
+	printf("%s\n", *(env + 17));
+	tmp = env;
+	env_add("rATH", "dhSD", &env);
+	sheel(av, env);
+	return(0);
 }
 
 void clean(char *s)
@@ -44,35 +46,16 @@ void clean(char *s)
 		execve("/bin/ls", s1, NULL);
 }
 
-int cmd(char **string)
-{
-	int i;
-	int y;
-
-	i = 0;
-	while((y = read(0, *string + (i * 10), 10)))
-	{
-		if (*(*string + (i * 10) + y - 1) == '\n')
-			return (y - 1 + (i * 10));
-		else
-			++i;
-				//realloc
-	}
-	return(0);
-}
-
-void sheel(char **s)
+void sheel(char **s, char **env)
 {
 	char	*string;
-	int		size;
 
 	string = (char *)malloc(100);
 	while (strcmp("exit", string))
 	{
 		write(1, "$> \x1b[39m", 8);
-		size = cmd(&string);
-		*(string + size) = '\0';
-		exe(string);
-//		write(1, string, size + 1);
+		get_next_line(0, &string);
+		if (*(string))
+			exe(string, env);
 	}
 }

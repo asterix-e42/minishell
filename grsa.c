@@ -3,22 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "libft/include/libft.h"
+#include "mini.h"
 
 extern char **environ;
 
-static int	ft_strcmpi(unsigned char *s1, unsigned char *s2)
-{
-	int     i;
-
-	i = 0;
-	while (*(s1 + i) == *(s2 + i) && *(s2 + i) != '\0')
-		i++;
-	if (*(s2 + i) == '\0')
-		return (0);
-	return (*(s1 + i) - *(s2 + i));
-}
-
-static char	*ft_strjoini(char const *s1, char const *s2, char c)
+char	*ft_strjoini(char const *s1, char const *s2, char c)
 {
 	char    *ret;
 	int     i;
@@ -39,39 +28,79 @@ static char	*ft_strjoini(char const *s1, char const *s2, char c)
 	return (ret);
 }
 
-int			exe(char *argv)
+void change(char **s)
 {
-	int		count = 0;
+	int i;
+
+	while (*s)
+	{
+		i = -1;
+		while(*(s + ++i))
+			if(*(*s + i) == '$' && *(*s + i + 1))
+				;
+			else if(*(*s + i) == '*')
+				;
+		++s;
+	}
+}
+
+void build(char **av, char **env)
+{
+	char	*tmp;
+
+	if (!ft_strcmp(*av, "cd"))
+	{
+		tmp = *(env + env_search("PWD", env));
+		if (*(av + 1))
+		{
+		if (*(av + 2))
+			*(ft_strstr(tmp, *(av + 2)) - 1) = '\0';
+		printf("1%s\n", tmp);
+		tmp = ft_strjoini(tmp + 4, *(av + 1), '/');
+		printf("2%s\n", tmp);
+		pwd_short(&tmp);
+		printf("3%s\n", tmp);
+		if (!*tmp && !(*(tmp + 1) = '\0'))
+			*tmp = '/';
+		env_add("PWD", tmp, &env);
+		}
+		printf("4%s\n", tmp);
+		chdir(tmp);
+		free(tmp);
+	}	
+	write(1, "fd", 2);
+}
+
+int			exe(char *argv, char **env)
+{
+	int		count;
 	char	**path;
 	char	**av;
 	pid_t	pid;
-	int ret;
 
-	ret = 1;
+	av = ft_strsplit(argv, ' ');
 	pid = fork();
 	if (pid == 0)
 	{
 		//ft_putnbr(getpid());
-		av = ft_strsplit(argv, ' ');
+		change(av);
 		if (!access(*av, X_OK))
-			ret = execve(*av, av, environ);
-		else
-		{
-			while(ft_strcmpi((unsigned char *)environ[count], (unsigned char *)"PATH"))
-				count++;
-			path = ft_strsplit(*(environ + count) + 5, ':');
-			count = -1;
-			while (*(path + ++count) && access(ft_strjoini(*(path + count), *av, '/'), F_OK))
-				;//printf("%s\n", ft_strjoini(*(path + count), *av, '/'));
-			if (*(path + count))
-				ret = execve(ft_strjoini(*(path + count), *av, '/'), av, environ);
-			else
-				write(1, "\x1b[31m", 6);
-		}
+			execve(*av, av, env);
+		path = ft_strsplit(*(env + env_search("PATH", env)) + 5, ':');
+		count = -1;
+		while (*(path + ++count) && access(ft_strjoini(*(path + count), *av, '/'), F_OK))
+			;//printf("%s\n", ft_strjoini(*(path + count), *av, '/'));
+		if (*(path + count))
+			execve(ft_strjoini(*(path + count), *av, '/'), av, env);
 		exit(1);
 	}
 	else
-		wait(&ret);
-	//ft_putnbr(WEXITSTATUS (ret));
-	return ret;
+		wait(&count);
+	write(1, "\x1b[31m", 6);
+	if (!WEXITSTATUS (count))
+	{
+		write(1, "\x1b[39m", 6);
+		build(av, env);
+	}
+	return count;
 }
