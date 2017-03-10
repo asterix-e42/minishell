@@ -6,56 +6,46 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/01 16:25:00 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/09 18:20:33 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 #include <unistd.h>
 #include <stdlib.h>
-
-#include <stdio.h>
 #include <string.h>
-extern char **environ;
-int main(int ac, char **av)
-{
-	char	**env;
-	char	**tmp;
 
-	env = env_ralloc(0, environ);
+extern char	**environ;
+
+int		main(int ac, char **av)
+{
+	char	***env;
+	char	tmp[1024];
+
+	if (!(env=(char ***)malloc(sizeof(char **))))
+		return(1);
+	*env = env_ralloc(0, environ);
+	if (!getcwd(tmp, 1024))
+		return (1);
+	env_add("PWD", tmp, env);
 	env_lvlup(env);
-	printf("%s\n", *(env + 17));
-	tmp = env;
-	env_add("rATH", "dhSD", &env);
+	env_add("_", *av, env);
 	sheel(av, env);
-	return(0);
+	env_free(env);
+	return (0);
 }
 
-void clean(char *s)
-{
-	pid_t pid;
-	char **s1;
-
-	s1 = (char **)malloc(sizeof(char *) * 2);
-	*s1 = s;
-	*(s1 + 1) = NULL;
-	pid = fork();
-	if (pid > 0)
-		wait(0);
-	else
-		execve("/bin/ls", s1, NULL);
-}
-
-void sheel(char **s, char **env)
+void	sheel(char **s, char ***env)
 {
 	char	*string;
 
-	string = (char *)malloc(100);
-	while (strcmp("exit", string))
+	while (42)
 	{
 		write(1, "$> \x1b[39m", 8);
 		get_next_line(0, &string);
-		if (*(string))
+		if (!ft_strcmp("exit", string))
+			exit(EXIT_SUCCESS);
+		else if (*(string))
 			exe(string, env);
 	}
 }
