@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 18:30:11 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/06 14:37:11 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/11 02:24:53 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,22 @@ int		insert_home(char **s, int symb, char **env)
 {
 	char	*envhome;
 	int		size;
-	char	*stk;
 	char	*tmp;
 
+	tmp = *s;
 	if (*(*s + symb) != '~')
 		return (2);
 	envhome = "";
 	if (*(env + env_search("HOME", env)))
 		envhome = *(env + env_search("HOME", env)) + 5;
 	size = ft_strlen(envhome);
-	if (!(stk = (char *)malloc(sizeof(char) * (ft_strlen(*s) + size))))
+	if (!(*s = ft_memalloc((ft_strlen(tmp) + size + 1))))
 		return (1);
-	ft_strncat(stk, *s, symb);
-	ft_strcat(stk + symb, envhome);
-	ft_strcat(stk + symb + size, *s + symb + 1);
-	tmp = *s;
-	*s = stk;
+	//ft_strncpy(*s, tmp, symb);
+	ft_strcpy(*s + symb, envhome);
+	ft_strcat(*s + symb + size, tmp + symb + 1);
 	free(tmp);
+	tmp = NULL;
 	return (0);
 }
 

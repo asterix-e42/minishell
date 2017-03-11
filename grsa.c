@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/09 23:43:56 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/11 02:48:52 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,29 @@ char	*ft_strjoini(char const *s1, char const *s2, char c)
 	return (ret);
 }
 
-void	change(char **s, char **env)
+void	change(char ***s, char **env)
 {
 	int i;
+	int j;
 
-	while (*s)
+	j = 0;
+	while (*(*s + j))
 	{
 		i = 0;
-		while (*(*s + i))
+		while (*(*(*s + j) + i))
 		{
-			if (*(*s + i) == '$' && *(*s + i + 1))
-				i += variable(s, i, env);
-			else if (*(*s + i) == '*')
+			if (*(*(*s + j) + i) == '$' && *(*(*s + j) + i + 1))
+				i += variable((*s + j), i, env);
+			else if (*(*(*s + j) + i) == '*')
 				;
-			else if (i == 0 && *(*s + i) == '~')
-				insert_home(s, i++, env);
+			else if (i == 0 && *(*(*s + j) + i) == '~')
+			{
+				insert_home((*s + j), i++, env);
+			}
 			else
 				++i;
 		}
-		++s;
+		++j;
 	}
 }
 
@@ -126,10 +130,14 @@ void freeteuse(void **s, int niveau)
 	int i;
 
 	i = -1;
+	write(1, "1", 1);
 	if (niveau)
 		while (*(s + ++i))
 			freeteuse((void **)*(s + i), niveau - 1);
+	write(1, "2", 1);
 	free(s);
+	s = NULL;
+	write(1, "3", 1);
 }
 
 int			supersplit(char ****ret, char *av, char s1, char s2)
@@ -170,7 +178,7 @@ int			exe(char *argv, char ***env)
 		return (0);
 	while(*(av + ++i))
 	{
-		change(*(av + i), *env);
+		change((av + i), *env);
 		env_add("_", **(av + i), env);
 		if (built_in(*(av + i), env))
 			;
@@ -193,6 +201,7 @@ int			exe(char *argv, char ***env)
 			new_process(*(av + i), *env, " command not found: ");
 		}
 	}
+	write(1, "1", 1);
 	freeteuse((void **)av, 2);
 	return (1);
 }

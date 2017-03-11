@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:47:09 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/09 17:53:20 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/11 02:06:23 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	cd_next(char **av, char **env)
 {
 	char	*tmp;
 
+	write(1, "r", 1);
 	tmp = *(env + env_search("PWD", env));
 	if (*(av))
 	{
