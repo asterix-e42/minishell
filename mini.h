@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:31:19 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 18:45:06 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 21:07:31 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <fcntl.h>
 # include <unistd.h>
-# include "libft/include/libft.h"
+# include "src/libft/include/libft.h"
 # include <stdlib.h>
 
 # define BUFF_SIZE 1000
@@ -23,7 +23,7 @@
 
 int		get_next_line(const int fd, char **line);
 
-void	sheel(char **s, char ***env);
+void	sheel(char ***env);
 int		exe(char *av, char ***env);
 char	*ft_strjoini(char const *s1, char const *s2, char c);
 
@@ -41,6 +41,7 @@ void	cd(char **av, char **env);
 int		insert_home(char **s, int r, char **env);
 int		variable(char **s, int symb, char **env);
 int		is_dir(char *s);
+int		new_process(char **av, char **env, char *error);
 
 void	freeteuse(void **s, int niveau);
 void	whereareyou(char *name, char ***env);
