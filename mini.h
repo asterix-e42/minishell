@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:31:19 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/09 18:53:44 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 18:45:06 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,16 @@ char	**env_ralloc(int diff, char **env);
 void	env_lvlup(char ***env);
 int		env_sup(char *name, char ***env);
 void	env_free(char ***env);
+void	env_print(char **env);
 
 void	pwd_short(char **pwd);
-void	cd_next(char **av, char **env);
+void	cd(char **av, char **env);
 
 int		insert_home(char **s, int r, char **env);
 int		variable(char **s, int symb, char **env);
 int		is_dir(char *s);
 
+void	freeteuse(void **s, int niveau);
+void	whereareyou(char *name, char ***env);
+int		supersplit(char ****ret, char *av, char s1, char s2);
 #endif

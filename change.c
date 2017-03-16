@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 18:30:11 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/11 02:24:53 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 18:46:54 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int		insert_home(char **s, int symb, char **env)
 	size = ft_strlen(envhome);
 	if (!(*s = ft_memalloc((ft_strlen(tmp) + size + 1))))
 		return (1);
-	//ft_strncpy(*s, tmp, symb);
 	ft_strcpy(*s + symb, envhome);
 	ft_strcat(*s + symb + size, tmp + symb + 1);
 	free(tmp);
@@ -51,17 +50,19 @@ int		variable(char **s, int symb, char **env)
 	else
 	{
 		while (*(*s + symb + save_p) && *(*s + symb + ++save_p) != '$')
-			save_c = *(*s + symb + save_p + 1);
+			save_c = *(*s + symb + save_p);
 		*(*s + symb + save_p) = '\0';
 		if ((change = "") && *(env + env_search(*s + symb + 1, env)))
 			change = *(env + env_search(*s + symb + 1, env)) + save_p;
 	}
 	if (!(*s = ft_memalloc((1 + ft_strlen(*s) - save_p + ft_strlen(change)))))
 		return (0);
-	*(*s + symb + save_p) = save_c;
+	*(tmp + symb + save_p) = save_c;
 	ft_strncpy(*s, tmp, symb);
 	ft_strcat(*s + symb, change);
 	ft_strcat(*s + symb + ft_strlen(change), tmp + symb + save_p);
+	write(1, "1", 1);
 	free(tmp);
+	write(1, "2", 1);
 	return (ft_strlen(change));
 }

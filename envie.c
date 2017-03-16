@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/28 17:31:38 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/09 18:48:31 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 19:52:20 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mini.h"
+
+void		env_print(char **env)
+{
+	--env;
+	while(*(++env))
+		ft_putendl(*env);
+}
 
 void		env_free(char ***env)
 {
@@ -23,7 +30,6 @@ void		env_free(char ***env)
 	while (*(*env + ++count))
 		free(*(*env + count));
 	free(*env);
-	*env = NULL;
 }
 
 int			env_search(char *name, char **env)
@@ -90,7 +96,7 @@ void		env_add(char *name, char *new, char ***env)
 	if (!(*env)[where])
 	{
 		*env = env_ralloc(1, *env);
-		env_free(&tmp);
+//		env_free(&tmp);
 	}
 	else
 		free(*(*env + where));

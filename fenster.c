@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/09 18:20:33 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 19:52:50 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,11 @@ extern char	**environ;
 int		main(int ac, char **av)
 {
 	char	***env;
-	char	tmp[1024];
 
 	if (!(env=(char ***)malloc(sizeof(char **))))
 		return(1);
 	*env = env_ralloc(0, environ);
-	if (!getcwd(tmp, 1024))
-		return (1);
-	env_add("PWD", tmp, env);
+	whereareyou("PWD", env);
 	env_lvlup(env);
 	env_add("_", *av, env);
 	sheel(av, env);

@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/11 02:48:52 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 19:15:48 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		new_process(char **av, char **env, char *error)
 
 	if (!is_dir(*av))
 	{
-		cd_next(av, env);
+		cd(av, env);
 		return (EXIT_SUCCESS);
 	}
 	if (!access(*av, X_OK))
@@ -101,71 +101,33 @@ int		built_in(char **av, char ***env)
 
 	*(tmp + 1) = NULL;
 	if (!ft_strcmp(*av, "cd"))
-		cd_next(&(*(av + 1)), *env);
+		cd(&(*(av + 1)), *env);
 	else if (!ft_strcmp(*av, "setenv"))
 	{
-		if (!*(av + 1) && (*tmp = "/usr/bin/env"))
-			new_process(tmp, *env, "merde");
+		if (!*(av + 1))
+			env_print(*env);
 		else if (!*(av + 2))
 			env_add(*(av + 1), "''", env);
 		else
 			env_add(*(av + 1), *(av + 2), env);
 	}
+	else if (!ft_strcmp(*av, "env"))
+		env_print(*env);
 	else if (!ft_strcmp(*av, "unsetenv"))
 		while (*(++av))
 			env_sup(*av, env);
 	else if (!ft_strcmp(*av, "echo"))
-		while (*(++av))
-			ft_putendl(*av);
+		if (!*(av + 1))
+			write(1, "\n", 1);
+		else
+			while (*(++av))
+				ft_putendl(*av);
 	else
 		return (0);
 	while (*(av))
 		++av;
 	env_add("_", *(av - 1), env);
 	return (1);
-}
-
-void freeteuse(void **s, int niveau)
-{
-	int i;
-
-	i = -1;
-	write(1, "1", 1);
-	if (niveau)
-		while (*(s + ++i))
-			freeteuse((void **)*(s + i), niveau - 1);
-	write(1, "2", 1);
-	free(s);
-	s = NULL;
-	write(1, "3", 1);
-}
-
-int			supersplit(char ****ret, char *av, char s1, char s2)
-{
-	char	**e1;
-	int		size;
-
-	if (!(e1 = ft_strsplit(av, s1)))
-		return (1);
-	size = -1;
-	while(*(e1 + ++size))
-		;
-	if (!(*ret = (char ***)malloc(sizeof(char **) * (size + 1))))
-	{
-		freeteuse((void **)e1, 1);
-		return(1);
-	}
-	*(*ret + size) = NULL;
-	while (--size + 1)
-		if (!(*(*ret + size) = ft_strsplit(*(e1 + size), s2)))
-		{
-			while(*(*ret + ++size))
-				freeteuse((void **)(*ret + size), 2);
-			freeteuse((void **)e1, 1);
-			return(1);
-		}
-	freeteuse((void **)e1, 1);
-	return(0);
 }
 
 int			exe(char *argv, char ***env)
@@ -193,7 +155,7 @@ int			exe(char *argv, char ***env)
 			{
 				if (!access(ft_strjoini(*(path), **(av + i), '/'), F_OK))
 				{
-					free(**(av + i));
+			//		free(**(av + i));
 					**(av + i) = ft_strjoini(*(path), **(av + i), '/');
 				}
 				free(*path);
@@ -201,7 +163,7 @@ int			exe(char *argv, char ***env)
 			new_process(*(av + i), *env, " command not found: ");
 		}
 	}
-	write(1, "1", 1);
+//	write(1, "r", 1);
 	freeteuse((void **)av, 2);
 	return (1);
 }

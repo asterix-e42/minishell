@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/06 22:55:51 by tdumouli          #+#    #+#             */
-/*   Updated: 2016/11/11 12:32:47 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/16 15:35:17 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char		**ft_strsplit(char const *s, char c)
 	i = -1;
 	while (*(s + ++i))
 		len += (*(s + i) != c) && (i == 0 || (*(s + i - 1) == c));
-	if (!(tab = (char **)malloc(sizeof(char *) * len + 1)))
+	if (!(tab = (char **)ft_memalloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	*(tab + len) = NULL;
 	while (len-- > 0)
