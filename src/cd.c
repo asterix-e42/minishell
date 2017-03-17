@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:47:09 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 20:29:25 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/17 20:51:45 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,18 @@ void	cd(char **av, char **env)
 		if (*(av + 1))
 			*(ft_strstr(tmp, *(av + 1)) - 1) = '\0';
 		if (**(av) == '/')
-			tmp = *(av);
+			tmp = ft_strdup(*(av));
 		else
 			tmp = ft_strjoini(tmp + 4, *(av), '/');
 		pwd_short(&tmp);
 		if (!*tmp && !(*(tmp + 1) = '\0'))
 			*tmp = '/';
+		if (!sesame(tmp))
+		{
+			whereareyou("OLDPWD", &env);
+			env_add("PWD", tmp, &env);
+			chdir(tmp);
+		}
+		free(tmp);
 	}
-	if (!sesame(tmp))
-	{
-		whereareyou("OLDPWD", &env);
-		env_add("PWD", tmp, &env);
-		chdir(tmp);
-	}
-	//free(tmp);
 }	

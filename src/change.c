@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 18:30:11 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 20:27:20 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/17 20:37:37 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		variable(char **s, int symb, char **env)
 	char	save_c;
 	char	*change;
 	char	*tmp;
+	int		ret;
 
 	save_p = 2;
 	tmp = *s;
@@ -61,8 +62,8 @@ int		variable(char **s, int symb, char **env)
 	ft_strncpy(*s, tmp, symb);
 	ft_strcat(*s + symb, change);
 	ft_strcat(*s + symb + ft_strlen(change), tmp + symb + save_p);
-	write(1, "1", 1);
 	free(tmp);
-	write(1, "2", 1);
-	return (ft_strlen(change));
+	ret = ft_strlen(change);
+	free (change);
+	return (ret);
 }

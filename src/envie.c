@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/28 17:31:38 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 19:52:20 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/17 19:56:02 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,12 @@ void		env_add(char *name, char *new, char ***env)
 	int		where;
 	char	**tmp;
 
-	tmp = *env;
 	where = env_search(name, *env);
 	if (!(*env)[where])
 	{
-		*env = env_ralloc(1, *env);
-//		env_free(&tmp);
+		tmp = env_ralloc(1, *env);
+		env_free(env);
+		*env = tmp;
 	}
 	else
 		free(*(*env + where));

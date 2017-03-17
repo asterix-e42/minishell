@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/03/16 21:06:21 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/03/17 19:32:58 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ LIB = libft/libft.a
 OBJ =	$(addprefix $(OBJDIR)/, $(LS)) 
 
 LSTDIRI =
+debugg = 
 
 ############################## normaly no change ###############################
 
@@ -35,7 +36,7 @@ GREEN="\x1b[32m"
 YELLOW="\x1b[33m"
 CC = gcc
 CFLAGS = -I$(INCDIR) -Wall -Wextra -Werror
-DEBUG =  -fsanitize=address -g3
+DEBUG = -fsanitize=address -g3
 MAKE = /usr/bin/make
 
 LSTDIR=	$(addprefix $(OBJDIR)/, $(LSTDIRI)) \

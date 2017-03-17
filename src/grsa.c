@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 21:10:22 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/17 20:51:41 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,8 @@ int			exe(char *argv, char ***env)
 	char	**path;
 	char	***av;
 	int		i;
+	char	*tmp;
+	int		j;
 
 	i = -1;
 	if (supersplit(&av, argv, ';', ' '))
@@ -143,20 +145,23 @@ int			exe(char *argv, char ***env)
 		else if (ft_strchr(**(av + i), '/'))
 			new_process(*(av + i), *env, " no such file or directory: ");
 		else if ((path = ft_strsplit((*(*env + env_search("PATH", *env)) ?
-		*(*env + env_search("PATH", *env)) + 5 :
+				*(*env + env_search("PATH", *env)) + 5 :
 		"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki"), ':')))
 		{
-			(--path);
-			while (*(++path))
+			j = -1;
+			while (*(path + ++j))
 			{
-				if (!access(ft_strjoini(*(path), **(av + i), '/'), F_OK))
+				tmp = ft_strjoini(*(path + j), **(av + i), '/');
+				if (!access(tmp, F_OK))
 				{
-			//		free(**(av + i));
-					**(av + i) = ft_strjoini(*(path), **(av + i), '/');
+					free(**(av + i));
+					**(av + i) = tmp;
 				}
-				free(*path);
+				else
+					free(tmp);
 			}
 			new_process(*(av + i), *env, " command not found: ");
+			freeteuse((void **)path, 1);
 		}
 	}
 	//write(1, "r", 1);

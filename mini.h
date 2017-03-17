@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:31:19 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/16 21:07:31 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/17 17:13:43 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 int		get_next_line(const int fd, char **line);
 
-void	sheel(char ***env);
+int		sheel(char **av);
 int		exe(char *av, char ***env);
 char	*ft_strjoini(char const *s1, char const *s2, char c);
 
