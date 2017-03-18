@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:47:09 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/17 20:51:45 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/18 22:03:04 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ void	pwd_short(char **pwd)
 	{
 		if (*(*pwd + ber) == '/' && *(*pwd + ber + 1) == '.')
 		{
-			if (*(*pwd + ber + 2) == '.' && 
+			if (*(*pwd + ber + 2) == '.' &&
 					(*(*pwd + ber + 3) == '/' || !*(*pwd + ber + 3)))
 			{
 				*(*pwd + writ) = '\0';
-				writ = (writ < 1) ? 0 :ft_strrchr(*pwd, '/') - *pwd;
+				writ = (writ < 1) ? 0 : ft_strrchr(*pwd, '/') - *pwd;
 				ber += 3;
 			}
 			else if (*(*pwd + ber + 2) == '/' || !*(*pwd + ber + 2))
@@ -42,34 +42,33 @@ void	pwd_short(char **pwd)
 	*(*pwd + writ - 1) = (*(*pwd + writ - 1) == '/') ? '\0' : (*pwd)[writ - 1];
 }
 
-char *sesame(char *directory)
+char	*sesame(char *directory)
 {
-	struct stat  file_stat; 
+	struct stat		file_stat;
 
-	if (stat(directory, &file_stat) < 0) 
+	if (stat(directory, &file_stat) < 0)
 		write(2, "existe pas\n", 11);
+	else if (file_stat.st_mode & S_IXUSR)
+		return (NULL);
 	else
-		if (file_stat.st_mode & S_IXUSR)
-			return(NULL);
-		else
-			write(2, "pas touche\n", 11);
-	return("merde");
+		write(2, "pas touche\n", 11);
+	return ("merde");
 }
 
-void	cd(char **av, char **env)
+void	cd(char *av, char **env)
 {
 	char	*tmp;
 
-	//write(1, "T", 1);
+	whereareyou("PWD", &env);
 	tmp = *(env + env_search("PWD", env));
-	if (*(av))
+	if ((av))
 	{
-		if (*(av + 1))
-			*(ft_strstr(tmp, *(av + 1)) - 1) = '\0';
-		if (**(av) == '/')
-			tmp = ft_strdup(*(av));
+		if (*(av) == '/')
+			tmp = ft_strdup((av));
+		else if (*(tmp + 4) == '/' && !*(tmp + 5))
+			tmp = ft_strjoini("", (av), '/');
 		else
-			tmp = ft_strjoini(tmp + 4, *(av), '/');
+			tmp = ft_strjoini(tmp + 4, (av), '/');
 		pwd_short(&tmp);
 		if (!*tmp && !(*(tmp + 1) = '\0'))
 			*tmp = '/';
@@ -80,5 +79,6 @@ void	cd(char **av, char **env)
 			chdir(tmp);
 		}
 		free(tmp);
+			write(1, "4", 1);
 	}
-}	
+}

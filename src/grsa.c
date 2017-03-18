@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/17 20:51:41 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/18 22:03:06 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		new_process(char **av, char **env, char *error)
 
 	if (!is_dir(*av))
 	{
-		cd(av, env);
+		cd(*av, env);
 		return (EXIT_SUCCESS);
 	}
 	if (!access(*av, X_OK))
@@ -80,43 +80,50 @@ int		new_process(char **av, char **env, char *error)
 			execve(*av, av, env);
 		else
 			wait(&count);
-		return(WEXITSTATUS (count));
+		return (WEXITSTATUS(count));
 	}
-	ft_putstr_fd(SHELL, 2);
-	ft_putstr_fd(error, 2);
-	ft_putstr_fd(*av, 2);
-	ft_putchar_fd('\n', 2);
-	//write(1, "\x1b[31m", 6);
+	erreur(error, *av);
 	return (1);
 }
 
 int		built_in(char **av, char ***env)
 {
-	char	*tmp[2];
-
-	*(tmp + 1) = NULL;
+	if (!*av)
+		return (1);
 	if (!ft_strcmp(*av, "cd"))
-		cd(&(*(av + 1)), *env);
-	else if (!ft_strcmp(*av, "setenv"))
 	{
+		if (!*(av + 1))
+			;
+		else if (!ft_strcmp(*(av + 1), "-"))
+		{
+			if (!*(*env + env_search("OLDPWD", *env)))
+				erreur("cd:", "OLDPWD not set");
+			else
+				cd((*(*env + env_search("OLDPWD", *env)) + 7), *env);
+		}
+		else
+			cd((*(av + 1)), *env);
+	}
+	else if (!ft_strcmp(*av, "setenv"))
 		if (!*(av + 1))
 			env_print(*env);
 		else if (!*(av + 2))
 			env_add(*(av + 1), "''", env);
 		else
 			env_add(*(av + 1), *(av + 2), env);
-	}
 	else if (!ft_strcmp(*av, "env"))
 		env_print(*env);
 	else if (!ft_strcmp(*av, "unsetenv"))
 		while (*(++av))
 			env_sup(*av, env);
 	else if (!ft_strcmp(*av, "echo"))
+	{
 		if (!*(av + 1))
 			write(1, "\n", 1);
 		else
 			while (*(++av))
 				ft_putendl(*av);
+	}
 	else
 		return (0);
 	while (*(av))
@@ -136,17 +143,17 @@ int			exe(char *argv, char ***env)
 	i = -1;
 	if (supersplit(&av, argv, ';', ' '))
 		return (0);
-	while(*(av + ++i))
+	while (*(av + ++i))
 	{
 		change((av + i), *env);
 		env_add("_", **(av + i), env);
 		if (built_in(*(av + i), env))
 			;
 		else if (ft_strchr(**(av + i), '/'))
-			new_process(*(av + i), *env, " no such file or directory: ");
+			new_process(*(av + i), *env, "no such file or directory");
 		else if ((path = ft_strsplit((*(*env + env_search("PATH", *env)) ?
-				*(*env + env_search("PATH", *env)) + 5 :
-		"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki"), ':')))
+							*(*env + env_search("PATH", *env)) + 5 :
+							"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki"), ':')))
 		{
 			j = -1;
 			while (*(path + ++j))
@@ -160,11 +167,10 @@ int			exe(char *argv, char ***env)
 				else
 					free(tmp);
 			}
-			new_process(*(av + i), *env, " command not found: ");
+			new_process(*(av + i), *env, "command not found");
 			freeteuse((void **)path, 1);
 		}
 	}
-	//write(1, "r", 1);
 	freeteuse((void **)av, 2);
 	return (1);
 }

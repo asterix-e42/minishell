@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/28 17:31:38 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/17 19:56:02 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/18 21:47:40 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 void		env_print(char **env)
 {
 	--env;
-	while(*(++env))
+	while (*(++env))
 		ft_putendl(*env);
 }
 
@@ -76,7 +76,8 @@ char		**env_ralloc(int diff, char **env)
 	lenght = -1;
 	while (*(env + ++lenght))
 		;
-	new = (char **)malloc(sizeof(char *) * (lenght + diff + 1));
+	if (!(new = (char **)malloc(sizeof(char *) * (lenght + diff + 1))))
+		return(NULL);
 	*(new + lenght + diff) = NULL;
 	while (--lenght != -1)
 		if ((*(new + lenght) = (char *)malloc(ft_strlen(*(env + lenght)))))
@@ -99,24 +100,22 @@ void		env_add(char *name, char *new, char ***env)
 		*env = tmp;
 	}
 	else
+	{
 		free(*(*env + where));
+	}
 	*(*env + where) = ft_strjoini(name, new, '=');
 }
 
 void		env_lvlup(char ***env)
 {
 	int		where;
-	char	*name;
+	char	*value;
 
-	name = "SHLVL";
-	where = env_search(name, *env);
+	where = env_search("SHLVL", *env);
 	if (!*(*env + where))
-		env_add("SHLVL", "1", env);
-	else if (*(*(*env + where) + ft_strlen(*(*env + where)) - 1) == '9')
-		printf("chiant\n");
-	//*env = env_ralloc(1, *env);
+		value = ft_strdup("1");
 	else
-		++*(*(*env + where) + ft_strlen(*(*env + where)) -1); 
-	//	free((*env)[where]);
-	//	*(*env + where) = ft_strjoini(name, new, '=');
+		value = ft_itoa(ft_atoi(*(*env + where) + 6) + 1);
+	env_add("SHLVL", value, env);
+	free(value);
 }

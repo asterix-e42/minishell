@@ -5,14 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/02 18:30:11 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/17 20:37:37 by tdumouli         ###   ########.fr       */
+/*   Created: 2017/03/18 16:19:35 by tdumouli          #+#    #+#             */
+/*   Updated: 2017/03/18 16:39:30 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/include/libft.h"
 #include "mini.h"
 #include <stdlib.h>
+
+int		copy(char **s, int symb, char *insert, int save_p)
+{
+	char	*tmp;
+
+	tmp = *s;
+	if (!(*s = ft_memalloc((1 + ft_strlen(*s) - save_p + ft_strlen(insert)))))
+		return (1);
+	ft_strncpy(*s, tmp, symb);
+	ft_strcat(*s + symb, insert);
+	ft_strcat(*s + symb + ft_strlen(insert), tmp + symb + save_p);
+	free(tmp);
+	return (0);
+}
 
 int		insert_home(char **s, int symb, char **env)
 {
@@ -40,30 +54,25 @@ int		variable(char **s, int symb, char **env)
 {
 	int		save_p;
 	char	save_c;
-	char	*change;
-	char	*tmp;
+	char	*chang;
 	int		ret;
 
 	save_p = 2;
-	tmp = *s;
 	if (*(*s + symb + 1) == '$' && (save_c = *(*s + symb + 2)) + 1)
-		change = ft_itoa(getpid());
+		chang = ft_itoa(getpid());
 	else
 	{
 		while (*(*s + symb + save_p) && *(*s + symb + ++save_p) != '$')
 			save_c = *(*s + symb + save_p);
 		*(*s + symb + save_p) = '\0';
-		if ((change = "") && *(env + env_search(*s + symb + 1, env)))
-			change = *(env + env_search(*s + symb + 1, env)) + save_p;
+		if (*(env + env_search(*s + symb + 1, env)))
+			chang = ft_strdup(*(env + env_search(*s + symb + 1, env)) + save_p);
+		else
+			chang = ft_strdup("");
 	}
-	if (!(*s = ft_memalloc((1 + ft_strlen(*s) - save_p + ft_strlen(change)))))
-		return (0);
-	*(tmp + symb + save_p) = save_c;
-	ft_strncpy(*s, tmp, symb);
-	ft_strcat(*s + symb, change);
-	ft_strcat(*s + symb + ft_strlen(change), tmp + symb + save_p);
-	free(tmp);
-	ret = ft_strlen(change);
-	free (change);
+	*(*s + symb + save_p) = save_c;
+	copy(s, symb, chang, save_p);
+	ret = ft_strlen(chang);
+	free(chang);
 	return (ret);
 }
