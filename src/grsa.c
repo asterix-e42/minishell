@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 22:03:06 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/19 20:27:06 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,7 @@ int			exe(char *argv, char ***env)
 		else if (ft_strchr(**(av + i), '/'))
 			new_process(*(av + i), *env, "no such file or directory");
 		else if ((path = ft_strsplit((*(*env + env_search("PATH", *env)) ?
-							*(*env + env_search("PATH", *env)) + 5 :
-							"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki"), ':')))
+			*(*env + env_search("PATH", *env)) + 5 :""), ':')))
 		{
 			j = -1;
 			while (*(path + ++j))
