@@ -6,21 +6,14 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/28 17:31:38 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 21:47:40 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 02:01:41 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/include/libft.h"
+#include "libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "mini.h"
-
-void		env_print(char **env)
-{
-	--env;
-	while (*(++env))
-		ft_putendl(*env);
-}
 
 void		env_free(char ***env)
 {
@@ -77,7 +70,7 @@ char		**env_ralloc(int diff, char **env)
 	while (*(env + ++lenght))
 		;
 	if (!(new = (char **)malloc(sizeof(char *) * (lenght + diff + 1))))
-		return(NULL);
+		return (NULL);
 	*(new + lenght + diff) = NULL;
 	while (--lenght != -1)
 		if ((*(new + lenght) = (char *)malloc(ft_strlen(*(env + lenght)))))
@@ -104,18 +97,4 @@ void		env_add(char *name, char *new, char ***env)
 		free(*(*env + where));
 	}
 	*(*env + where) = ft_strjoini(name, new, '=');
-}
-
-void		env_lvlup(char ***env)
-{
-	int		where;
-	char	*value;
-
-	where = env_search("SHLVL", *env);
-	if (!*(*env + where))
-		value = ft_strdup("1");
-	else
-		value = ft_itoa(ft_atoi(*(*env + where) + 6) + 1);
-	env_add("SHLVL", value, env);
-	free(value);
 }

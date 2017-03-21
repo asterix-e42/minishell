@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_dir.c                                           :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/18 16:41:02 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/21 02:20:29 by tdumouli         ###   ########.fr       */
+/*   Created: 2017/03/21 01:50:03 by tdumouli          #+#    #+#             */
+/*   Updated: 2017/03/21 01:56:01 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <libft.h>
 
-int		is_dir(char *name)
+void	ft_echo(char **av)
 {
-	struct stat		a;
-
-	if (lstat(name, &a) < 0)
-		return (1);
-	if (S_ISDIR(a.st_mode))
-		return (0);
-	return (2);
+	if (!*(av + 1))
+		write(1, "\n", 1);
+	else
+		while (*(++av))
+			ft_putendl(*av);
 }

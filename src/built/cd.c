@@ -6,12 +6,12 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:47:09 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 22:03:04 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 02:47:30 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/stat.h>
-#include "libft/include/libft.h"
+#include "libft.h"
 #include "mini.h"
 
 void	pwd_short(char **pwd)
@@ -47,20 +47,19 @@ char	*sesame(char *directory)
 	struct stat		file_stat;
 
 	if (stat(directory, &file_stat) < 0)
-		write(2, "existe pas\n", 11);
+		return ("no such file or directory");
 	else if (file_stat.st_mode & S_IXUSR)
 		return (NULL);
 	else
-		write(2, "pas touche\n", 11);
-	return ("merde");
+		return ("permission denied");
 }
 
-void	cd(char *av, char **env)
+void	cd(char *av, char ***env)
 {
 	char	*tmp;
 
-	whereareyou("PWD", &env);
-	tmp = *(env + env_search("PWD", env));
+	whereareyou("PWD", env);
+	tmp = *(*env + env_search("PWD", *env));
 	if ((av))
 	{
 		if (*(av) == '/')
@@ -72,13 +71,29 @@ void	cd(char *av, char **env)
 		pwd_short(&tmp);
 		if (!*tmp && !(*(tmp + 1) = '\0'))
 			*tmp = '/';
-		if (!sesame(tmp))
+		if (sesame(tmp))
+			erreur("cd", sesame(tmp), av);
+		else
 		{
-			whereareyou("OLDPWD", &env);
-			env_add("PWD", tmp, &env);
+			whereareyou("OLDPWD", env);
+			env_add("PWD", tmp, env);
 			chdir(tmp);
 		}
 		free(tmp);
-			write(1, "4", 1);
 	}
+}
+
+void	built_cd(char **av, char ***env)
+{
+	if (!*(av + 1))
+		;
+	else if (!ft_strcmp(*(av + 1), "-"))
+	{
+		if (!*(*env + env_search("OLDPWD", *env)))
+			erreur(SHELL, "cd:", "OLDPWD not set");
+		else
+			cd((*(*env + env_search("OLDPWD", *env)) + 7), env);
+	}
+	else
+		cd((*(av + 1)), env);
 }

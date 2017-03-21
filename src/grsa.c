@@ -6,36 +6,15 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/19 20:27:06 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 02:43:07 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "libft/include/libft.h"
+#include "libft.h"
 #include "mini.h"
-
-char	*ft_strjoini(char const *s1, char const *s2, char c)
-{
-	char	*ret;
-	int		i;
-	int		j;
-
-	if (!s1 || !s2)
-		return (NULL);
-	i = ft_strlen(s1);
-	j = ft_strlen(s2);
-	if (!(ret = (char *)malloc(sizeof(char) * (i + j + 2))))
-		return (NULL);
-	*(ret + i + j + 1) = '\0';
-	while (j--)
-		*(ret + i + j + 1) = *(s2 + j);
-	*(ret + i) = c;
-	while (i--)
-		*(ret + i) = *(s1 + i);
-	return (ret);
-}
 
 void	change(char ***s, char **env)
 {
@@ -53,9 +32,7 @@ void	change(char ***s, char **env)
 			else if (*(*(*s + j) + i) == '*')
 				;
 			else if (i == 0 && *(*(*s + j) + i) == '~')
-			{
 				insert_home((*s + j), i++, env);
-			}
 			else
 				++i;
 		}
@@ -63,7 +40,7 @@ void	change(char ***s, char **env)
 	}
 }
 
-int		new_process(char **av, char **env, char *error)
+int		new_process(char **av, char ***env, char *error)
 {
 	pid_t	pid;
 	int		count;
@@ -77,12 +54,12 @@ int		new_process(char **av, char **env, char *error)
 	{
 		pid = fork();
 		if (pid == 0)
-			execve(*av, av, env);
+			execve(*av, av, *env);
 		else
 			wait(&count);
 		return (WEXITSTATUS(count));
 	}
-	erreur(error, *av);
+	erreur(SHELL, error, *av);
 	return (1);
 }
 
@@ -91,39 +68,16 @@ int		built_in(char **av, char ***env)
 	if (!*av)
 		return (1);
 	if (!ft_strcmp(*av, "cd"))
-	{
-		if (!*(av + 1))
-			;
-		else if (!ft_strcmp(*(av + 1), "-"))
-		{
-			if (!*(*env + env_search("OLDPWD", *env)))
-				erreur("cd:", "OLDPWD not set");
-			else
-				cd((*(*env + env_search("OLDPWD", *env)) + 7), *env);
-		}
-		else
-			cd((*(av + 1)), *env);
-	}
+		built_cd(av, env);
 	else if (!ft_strcmp(*av, "setenv"))
-		if (!*(av + 1))
-			env_print(*env);
-		else if (!*(av + 2))
-			env_add(*(av + 1), "''", env);
-		else
-			env_add(*(av + 1), *(av + 2), env);
+		ft_setenv(av, env);
 	else if (!ft_strcmp(*av, "env"))
 		env_print(*env);
 	else if (!ft_strcmp(*av, "unsetenv"))
 		while (*(++av))
 			env_sup(*av, env);
 	else if (!ft_strcmp(*av, "echo"))
-	{
-		if (!*(av + 1))
-			write(1, "\n", 1);
-		else
-			while (*(++av))
-				ft_putendl(*av);
-	}
+		ft_echo(av);
 	else
 		return (0);
 	while (*(av))
@@ -132,13 +86,36 @@ int		built_in(char **av, char ***env)
 	return (1);
 }
 
-int			exe(char *argv, char ***env)
+void	exe_path(char ***av, int i, char ***env)
 {
+	int		j;
 	char	**path;
+	char	*tmp;
+
+	if ((path = ft_strsplit((*(*env + env_search("PATH", *env)) ?
+						*(*env + env_search("PATH", *env)) + 5 : ""), ':')))
+	{
+		j = -1;
+		while (*(path + ++j))
+		{
+			tmp = ft_strjoini(*(path + j), **(av + i), '/');
+			if (!access(tmp, F_OK))
+			{
+				free(**(av + i));
+				**(av + i) = tmp;
+			}
+			else
+				free(tmp);
+		}
+		new_process(*(av + i), env, "command not found");
+		freeteuse((void **)path, 1);
+	}
+}
+
+int		exe(char *argv, char ***env)
+{
 	char	***av;
 	int		i;
-	char	*tmp;
-	int		j;
 
 	i = -1;
 	if (supersplit(&av, argv, ';', ' '))
@@ -150,25 +127,9 @@ int			exe(char *argv, char ***env)
 		if (built_in(*(av + i), env))
 			;
 		else if (ft_strchr(**(av + i), '/'))
-			new_process(*(av + i), *env, "no such file or directory");
-		else if ((path = ft_strsplit((*(*env + env_search("PATH", *env)) ?
-			*(*env + env_search("PATH", *env)) + 5 :""), ':')))
-		{
-			j = -1;
-			while (*(path + ++j))
-			{
-				tmp = ft_strjoini(*(path + j), **(av + i), '/');
-				if (!access(tmp, F_OK))
-				{
-					free(**(av + i));
-					**(av + i) = tmp;
-				}
-				else
-					free(tmp);
-			}
-			new_process(*(av + i), *env, "command not found");
-			freeteuse((void **)path, 1);
-		}
+			new_process(*(av + i), env, "no such file or directory");
+		else
+			exe_path(av, i, env);
 	}
 	freeteuse((void **)av, 2);
 	return (1);

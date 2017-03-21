@@ -6,11 +6,11 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 16:19:35 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 16:39:30 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 01:45:20 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/include/libft.h"
+#include "libft.h"
 #include "mini.h"
 #include <stdlib.h>
 

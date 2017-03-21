@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/03/18 21:40:37 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/03/21 02:01:13 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,15 @@ NAMEI =
 NAME = mini
 OBJDIR = ./objet
 SRCDIR = ./src
-INCDIR = .
+INCDIR = -I. -Isrc/libft/include
 
-LS =	cd.o envie.o get_next_line.o is_dir.o utilitaire.o change.o fenster.o\
-		grsa.o
+MINI =	envie.o enviede.o get_next_line.o is_dir.o utilitaire.o\
+		change.o fenster.o grsa.o\
+	   	built/echo.o built/cd.o built/setenv.o
 
 LIB = libft/libft.a
 
-OBJ =	$(addprefix $(OBJDIR)/, $(LS)) 
+OBJ =	$(addprefix $(OBJDIR)/, $(MINI)) 
 
 LSTDIRI =
 debugg = 
@@ -35,7 +36,7 @@ RED="\x1b[31m"
 GREEN="\x1b[32m"
 YELLOW="\x1b[33m"
 CC = gcc
-CFLAGS = -I$(INCDIR) -Wall -Wextra -Werror
+CFLAGS = $(INCDIR) -Wall -Wextra -Werror
 DEBUG = -fsanitize=address -g3
 MAKE = /usr/bin/make
 

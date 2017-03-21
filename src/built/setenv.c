@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_dir.c                                           :+:      :+:    :+:   */
+/*   setenv.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/18 16:41:02 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/21 02:20:29 by tdumouli         ###   ########.fr       */
+/*   Created: 2017/03/21 01:28:49 by tdumouli          #+#    #+#             */
+/*   Updated: 2017/03/21 01:46:02 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "libft.h"
+#include "mini.h"
 
-int		is_dir(char *name)
+void	ft_setenv(char **av, char ***env)
 {
-	struct stat		a;
-
-	if (lstat(name, &a) < 0)
-		return (1);
-	if (S_ISDIR(a.st_mode))
-		return (0);
-	return (2);
+	if (!*(av + 1))
+		env_print(*env);
+	else if (!*(av + 2))
+		env_add(*(av + 1), "''", env);
+	else
+		env_add(*(av + 1), *(av + 2), env);
 }

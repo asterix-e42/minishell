@@ -6,17 +6,38 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 15:29:31 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 21:52:39 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 02:39:30 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "libft/include/libft.h"
+#include "libft.h"
 #include "mini.h"
 
-void erreur(char *error, char *what)
+char	*ft_strjoini(char const *s1, char const *s2, char c)
 {
-	ft_putstr_fd(SHELL, 2);
+	char	*ret;
+	int		i;
+	int		j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = ft_strlen(s1);
+	j = ft_strlen(s2);
+	if (!(ret = (char *)malloc(sizeof(char) * (i + j + 2))))
+		return (NULL);
+	*(ret + i + j + 1) = '\0';
+	while (j--)
+		*(ret + i + j + 1) = *(s2 + j);
+	*(ret + i) = c;
+	while (i--)
+		*(ret + i) = *(s1 + i);
+	return (ret);
+}
+
+void	erreur(char *where, char *error, char *what)
+{
+	ft_putstr_fd(where, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(error, 2);
 	ft_putstr_fd(": ", 2);

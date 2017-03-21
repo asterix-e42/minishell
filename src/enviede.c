@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_dir.c                                           :+:      :+:    :+:   */
+/*   enviede.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/18 16:41:02 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/21 02:20:29 by tdumouli         ###   ########.fr       */
+/*   Created: 2017/03/21 01:58:11 by tdumouli          #+#    #+#             */
+/*   Updated: 2017/03/21 02:01:26 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "mini.h"
+#include "libft.h"
 
-int		is_dir(char *name)
+void		env_lvlup(char ***env)
 {
-	struct stat		a;
+	int		where;
+	char	*value;
 
-	if (lstat(name, &a) < 0)
-		return (1);
-	if (S_ISDIR(a.st_mode))
-		return (0);
-	return (2);
+	where = env_search("SHLVL", *env);
+	if (!*(*env + where))
+		value = ft_strdup("1");
+	else
+		value = ft_itoa(ft_atoi(*(*env + where) + 6) + 1);
+	env_add("SHLVL", value, env);
+	free(value);
+}
+
+void		env_print(char **env)
+{
+	--env;
+	while (*(++env))
+		ft_putendl(*env);
 }
