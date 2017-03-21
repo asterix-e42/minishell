@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/03/21 02:01:13 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/03/21 02:53:22 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ LIB = libft/libft.a
 
 OBJ =	$(addprefix $(OBJDIR)/, $(MINI)) 
 
-LSTDIRI =
+LSTDIRI = built
 debugg = 
 
 ############################## normaly no change ###############################

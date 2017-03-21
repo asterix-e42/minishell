@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/01/06 08:07:40 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/03/21 02:59:21 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ LST =	lstadd.o lstnew.o lstdel.o lstdelone.o lstiter.o lstmap.o lstfind.o \
 OBJ=	$(addsuffix .o, $(addprefix $(OBJDIR)/libc/ft_, $(SRCS))) \
 		$(addprefix $(OBJDIR)/liste/ft_, $(LST))
 
+LSTDIRI = libc liste
+
 ############################## normaly no change ###############################
 
 NO_COLOR="\x1b[39m"
@@ -39,17 +41,20 @@ YELLOW="\x1b[33m"
 CC = gcc
 CFLAGS = -I$(INCDIR) -Wall -Werror -Wextra
 MAKE = /usr/bin/make
+LSTDIR= $(addprefix $(OBJDIR)/, $(LSTDIRI)) \
 
 ifneq ($(NAME), )
-all: $(NAME)
+all: objdir $(NAME)
 	@echo $(GREEN)"compilation reussi"$(NO_COLOR)
 else
-all: $(OBJ)
+all: objdir $(OBJ)
 	@echo $(GREEN)"compilation reussi"$(NO_COLOR)
 endif
 
-$(OBJDIR):
-	@mkdir $(OBJDIR)
+objdir:
+	@if ! [ -d $(OBJDIR) ]; then\
+		mkdir $(OBJDIR) $(LSTDIR);\
+		fi
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -69,10 +74,10 @@ clean:
 	@$(MAKE) cleanv
 
 ifeq ($(shell find . -type f | grep "\.o"), )
-cleanv:
+	cleanv:
 	@echo $(GREEN)"les objets sont clean"$(NO_COLOR)
 else
-cleanv:
+	cleanv:
 	@echo $(RED)"il ya probleme"
 	@echo $(YELLOW)$(shell echo | find . -typr f | grep "\.o" | cat -e)
 	make -d
