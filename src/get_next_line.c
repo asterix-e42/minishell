@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 06:21:14 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/02/28 15:16:55 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/21 08:33:25 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int		get_next_line(const int fd, char **line)
 	t_list			*offset;
 	int				ret;
 
+	*line = NULL;
 	if (!(offset = (ft_lstfindsize(lsd, fd))))
 	{
 		if (!(offset = ft_lstnew("\0", 1)))

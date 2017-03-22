@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/18 21:50:30 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/22 15:30:03 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ int		sheel(char **av, char ***env)
 		get_next_line(0, &tmp);
 		string = ft_strtrim(tmp);
 		free(tmp);
-		if (!ft_strcmp("exit", string))
+		if (!string)
+			ft_putchar('\n');
+		else if (!ft_strcmp("exit", string))
 			flag = 0;
 		else if (*(string))
 			exe(string, env);

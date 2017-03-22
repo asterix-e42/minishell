@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/03/21 02:59:21 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/03/22 15:26:13 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,10 +74,10 @@ clean:
 	@$(MAKE) cleanv
 
 ifeq ($(shell find . -type f | grep "\.o"), )
-	cleanv:
+cleanv:
 	@echo $(GREEN)"les objets sont clean"$(NO_COLOR)
 else
-	cleanv:
+cleanv:
 	@echo $(RED)"il ya probleme"
 	@echo $(YELLOW)$(shell echo | find . -typr f | grep "\.o" | cat -e)
 	make -d
