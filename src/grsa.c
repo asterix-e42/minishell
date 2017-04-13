@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/31 16:15:50 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/04/13 22:42:41 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int		built_in(char **av, char ***env)
 	else if (!ft_strcmp(*av, "env"))
 		env_print(*env);
 	else if (!ft_strcmp(*av, "exit"))
-		exit(ft_atoi(*(av + 1)));
+		ft_mini_exit(av, env);
 	else if (!ft_strcmp(*av, "unsetenv"))
 		while (*(++av))
 			env_sup(*av, env);

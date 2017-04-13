@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/04/13 21:11:07 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/04/13 22:38:56 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ INCDIR = -I. -I./libft/include
 
 MINI =	envie.o enviede.o is_dir.o utilitaire.o	change.o fenster.o grsa.o\
 	   	saisie.o saisie2.o\
-	   	built/echo.o built/cd.o built/setenv.o
+	   	built/echo.o built/cd.o built/exit.o built/setenv.o
 
 LIB = libft/libft.a
 

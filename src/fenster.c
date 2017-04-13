@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/04/13 21:10:03 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/04/13 22:48:47 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 int		main(int ac, char **av, char **ae)
 {
-	int		retour;
 	char	***env;
 
 	if (!(env = (char ***)malloc(sizeof(char **))))
@@ -27,12 +26,11 @@ int		main(int ac, char **av, char **ae)
 	if (!(*env = env_ralloc(0, ae)))
 		return (1);
 	(void)ac;
-	retour = sheel(av, env);
-	env_free(env);
-	exit(retour);
+	sheel(av, env);
+	ft_mini_exit((void *)0, env);
 }
 
-int		sheel(char **av, char ***env)
+void	sheel(char **av, char ***env)
 {
 	char	*string;
 	int		flag;
@@ -57,5 +55,4 @@ int		sheel(char **av, char ***env)
 			exe(string, env);
 		free(string);
 	}
-	return (0);
 }

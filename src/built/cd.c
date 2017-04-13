@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:47:09 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/21 02:47:30 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/04/13 21:56:09 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,25 @@ void	pwd_short(char **pwd)
 {
 	int		writ;
 	int		ber;
+	int		flag;
 
 	writ = 0;
 	ber = 0;
-	while (*(*pwd + ber))
+	while (*(*pwd + ber) && !(flag = 0))
 	{
 		if (*(*pwd + ber) == '/' && *(*pwd + ber + 1) == '.')
 		{
-			if (*(*pwd + ber + 2) == '.' &&
-					(*(*pwd + ber + 3) == '/' || !*(*pwd + ber + 3)))
+			if ((*(*pwd + ber + 2) == '/' || !*(*pwd + ber + 2)) && (flag = 1))
+				ber += 2;
+			else if (*(*pwd + ber + 2) == '.' &&
+				(*(*pwd + ber + 3) == '/' || !*(*pwd + ber + 3)) && (flag = 1))
 			{
 				*(*pwd + writ) = '\0';
 				writ = (writ < 1) ? 0 : ft_strrchr(*pwd, '/') - *pwd;
 				ber += 3;
 			}
-			else if (*(*pwd + ber + 2) == '/' || !*(*pwd + ber + 2))
-				ber += 2;
 		}
-		else
+		if (!flag)
 			*(*pwd + writ++) = *(*pwd + ber++);
 	}
 	*(*pwd + writ) = '\0';
