@@ -6,14 +6,16 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 00:09:48 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/22 15:30:03 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/04/13 21:10:03 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+#include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 int		main(int ac, char **av, char **ae)
 {
@@ -42,12 +44,13 @@ int		sheel(char **av, char ***env)
 	flag = 1;
 	while (flag)
 	{
-		write(1, "$> \x1b[39m", 8);
-		get_next_line(0, &tmp);
+		write(1, "🦄 > \x1b[39m", 12);
+		tmp = saisie();
 		string = ft_strtrim(tmp);
 		free(tmp);
+		ft_putchar('\n');
 		if (!string)
-			ft_putchar('\n');
+			;
 		else if (!ft_strcmp("exit", string))
 			flag = 0;
 		else if (*(string))

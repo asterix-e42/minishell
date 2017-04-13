@@ -6,7 +6,7 @@
 #    By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:51:40 by tdumouli          #+#    #+#              #
-#    Updated: 2017/03/22 15:31:14 by tdumouli         ###   ########.fr        #
+#    Updated: 2017/04/13 21:11:07 by tdumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,10 @@ NAMEI =
 NAME = minishell
 OBJDIR = ./objet
 SRCDIR = ./src
-INCDIR = -I. -Isrc/libft/include
+INCDIR = -I. -I./libft/include
 
-MINI =	envie.o enviede.o get_next_line.o is_dir.o utilitaire.o\
-		change.o fenster.o grsa.o\
+MINI =	envie.o enviede.o is_dir.o utilitaire.o	change.o fenster.o grsa.o\
+	   	saisie.o saisie2.o\
 	   	built/echo.o built/cd.o built/setenv.o
 
 LIB = libft/libft.a
@@ -65,12 +65,12 @@ $(NAMEI): $(OBJ)
 	@echo $(GREEN)"library compile"$(NO_COLOR)
 
 $(NAME): $(OBJ)
-	$(MAKE) -C $(SRCDIR)/libft
-	$(CC) $(OBJ) $(SRCDIR)/$(LIB) -o $(NAME)
-	@echo $(GREEN)$(NAMECPL)" a ete cree"$(NO_COLOR)
+	$(MAKE) -C ./libft
+	$(CC) $(OBJ) ./$(LIB) -o $(NAME)
+	@echo $(GREEN)$(NAME)" a ete cree"$(NO_COLOR)
 
 clean:
-	@$(MAKE) clean -C $(SRCDIR)/libft
+	@$(MAKE) clean -C ./libft
 	@rm -rf $(OBJ)
 	@$(MAKE) cleanv
 
@@ -94,7 +94,7 @@ auteur:
 	@echo $(GREEN)"le fichier auteur a bien ete cree"$(NO_COLOR)
 
 fclean: clean
-	@$(MAKE) fclean -C $(SRCDIR)/libft
+	@$(MAKE) fclean -C ./libft
 	@rm -f $(NAME) $(NAMELIB)
 	@echo $(GREEN)"tout est clean"$(NO_COLOR)
 

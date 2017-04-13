@@ -6,7 +6,7 @@
 /*   By: tdumouli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 16:30:08 by tdumouli          #+#    #+#             */
-/*   Updated: 2017/03/21 08:36:47 by tdumouli         ###   ########.fr       */
+/*   Updated: 2017/03/31 16:15:50 by tdumouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	change(char ***s, char **env)
 			if (*(*(*s + j) + i) == '$' && *(*(*s + j) + i + 1))
 				i += variable((*s + j), i, env);
 			else if (*(*(*s + j) + i) == '*')
-				;
+				++i;
 			else if (i == 0 && *(*(*s + j) + i) == '~')
 				insert_home((*s + j), i++, env);
 			else
